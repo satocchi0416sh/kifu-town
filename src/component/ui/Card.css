@@ -1,0 +1,62 @@
+.ccard-main {
+  position: absolute;
+  width: 80ch;
+  height: 80ch;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+
+.ccard {
+  border-radius: 2px;
+  will-change: transform;
+  z-index: -1;
+  cursor: pointer;
+  border-radius: 15px;
+  background-size: cover;
+  width: 50ch;
+  height: 60ch;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.ccard:hover {
+  filter: contrast(100%) brightness(100%);
+  z-index: 1;
+}
+
+.ccard:hover .title {
+  opacity: 100;
+  right: 0;
+  width: 100%;
+}
+
+.ccard .title {
+  border-radius: 2px;
+
+  opacity: 0;
+  font-family: "Open Sans";
+  position: absolute;
+  right: 30%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 100%;
+  width: 70%;
+  margin: 0;
+  padding: 10px 15px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  background: rgba(0, 0, 0, 0.6);
+  color: #f7e4be;
+}
+
+.ccard .title h2 {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
