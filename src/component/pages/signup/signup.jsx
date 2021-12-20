@@ -3,7 +3,7 @@ import { useHistory, Link } from 'react-router-dom';
 import Axios from "axios"
 import { ThemeProvider } from "@emotion/react";
 import Theme from "../../ui/Theme";
-import { Autocomplete, Avatar, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Autocomplete, Avatar, Button, Container, CssBaseline, Grid, Paper, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { Check, LockOutlined } from "@mui/icons-material";
 function SignUp() {
