@@ -1,6 +1,7 @@
 import { useHistory, useParams, useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
 import Axios from "axios"
+import DisNote from "./DisNote"
 
 function Notice(props){
     const { id } = props
@@ -11,15 +12,23 @@ function Notice(props){
         Axios.get(`https://friendly-bungotaketa-1534.lolipop.io/getNotice/${id}`)
         .then((response) => {
             setNoticeList(response.data)
+            console.log(response.data)
         })
+        Axios.post(`https://friendly-bungotaketa-1534.lolipop.io/readNotice/${id}`)
+        .then((response) => {
+            setNoticeList(response.data)
+        })
+
     },[id])
+
+
     
     return(
         <>
         <p>お知らせ</p>
         {noticeList.map((data, index) => {
             return(
-                <p>{data}</p>
+                <DisNote key={index} type={data.type} dId={data.dId} title={data.title} text={data.text} date={data.newDate}/>
             )
         })}
         </>

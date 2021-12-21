@@ -9,10 +9,13 @@ function Check(props){
     /* 許可OR拒否？ */
     const conclude = (accept) => {
         let title;
+        let text;
         if(accept === 1) {
-            title = "プロジェクトが許諾されました。お支払いを完了してください。"
+            title = "プロジェクトの申請結果について"
+            text = "あなたが申請したプロジェクトは許諾されました。お支払いにお進みください。"
         }else{
-            title = "残念ながらあなたが申請したプロジェクトは許諾されませんでした。"
+            title = "プロジェクトの申請結果について"
+            text = "残念ながらあなたが申請したプロジェクトは許諾されませんでした。"
         }
         const date = new Date()
         const year = date.getFullYear()
@@ -21,7 +24,7 @@ function Check(props){
         const hour = date.getHours()
         const minute = date.getMinutes()
         const thisTime = `${year}/${month}/${day} ${hour}:${minute}:00`
-        sendResult(1, state.dId, state.userId, title, thisTime, accept)
+        sendResult(1, state.dId, state.userId, title, text, thisTime, accept)
 
         Axios.post("https://friendly-bungotaketa-1534.lolipop.io/conclude",{
             dId:state.dId,

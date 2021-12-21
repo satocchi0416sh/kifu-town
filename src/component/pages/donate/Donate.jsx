@@ -47,7 +47,7 @@ function Donate (props){
                 <br/>
                 <textarea required value={text} onChange={(e)=>{setText(e.target.value)}}/>
                 <br/>
-                <label>寄付総額</label>
+                <label>一人当たりの金額</label>
                 <br/>
                 <input required type="number" value={amount} onChange={(e)=>{setAmount(e.target.value)}}/>
                 <br/>
@@ -69,7 +69,7 @@ function Donate (props){
                     <option value={1}>自動当選</option>  
                 </select>
                 <br/>
-                <button type="submit">支払いに進む</button>
+                <button type="submit">入力内容の確認</button>
             </form>
 
         </div>

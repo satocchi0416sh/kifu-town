@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route} from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { useState, useEffect, useRef } from "react"
 import Axios from "axios"
 import './App.css';
@@ -23,34 +23,43 @@ import Notice from './component/pages/notice/Notice';
 
 const socket = io('https://friendly-bungotaketa-1534.lolipop.io')
 function App() {
-  const [ id, setId]=useState(null)
-  const [ name, setName]=useState("")
-  const [ twitterId, setTwitterId ] = useState(null)
-  const [ isLoggedIn, setIsLoggedIn]=useState(false)
-  const [ newMessage, setNewMessage ] = useState({})
-  const isMountRef=useRef(null)
-  
-  
-  useEffect(()=>{
-    const strage=localStorage.getItem("loggedDataTokenForkifukeiji")
-    const loggedData=JSON.parse(strage)
-    if(loggedData !==null){
+  const [id, setId] = useState(null)
+  const [name, setName] = useState("")
+  const [twitterId, setTwitterId] = useState(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const isMountRef = useRef(null)
+
+  // 通知の数
+  const [notificationNum, setNotificationNum] = useState(5)
+
+  useEffect(() => {
+    const strage = localStorage.getItem("loggedDataTokenForkifukeiji")
+    const loggedData = JSON.parse(strage)
+    if (loggedData !== null) {
       let token = loggedData["token"]
-      Axios.post("https://friendly-bungotaketa-1534.lolipop.io/auth",{token:token},{withCredentials:true}).then((response)=>{
-      console.log(response.data)
-      if(response.data.auth){
-        setId(response.data.id)
-        setName(response.data.name)
-        setTwitterId(response.data.twitterId)
-        setIsLoggedIn(true)
-      }
+      Axios.post("https://friendly-bungotaketa-1534.lolipop.io/auth", { token: token }, { withCredentials: true }).then((response) => {
+        console.log(response.data)
+        if (response.data.auth) {
+          setId(response.data.id)
+          setName(response.data.name)
+          setTwitterId(response.data.twitterId)
+          setIsLoggedIn(true)
+        }
       })
     }
-  },[])
+  }, [])
+
+  /* 通知の数取得 */
+  useEffect(() => {
+    Axios.get(`https://friendly-bungotaketa-1534.lolipop.io/getNotRead/${id}`)
+    .then((response) => {
+      console.log(response.data.length)
+      setNotificationNum(response.data.length)
+    })
+  },[id])
 
 
-
-  const login = (id,username,tId) => {
+  const login = (id, username, tId) => {
     setIsLoggedIn(true)
     setId(id)
     setName(username)
@@ -63,44 +72,49 @@ function App() {
     setId(null)
     setName("")
   }
-  
+
+  const edit = (name, twitterId) => {
+    setName(name)
+    setTwitterId(twitterId)
+  }
+
   /* リアルタイム通信関係 */
 
   /* 自分のidに参加 */
   useEffect(() => {
-    if(id !== null){
-      socket.emit("JOIN_ID",{id:id})
+    if (id !== null) {
+      socket.emit("JOIN_ID", { id: id })
     }
-  },[id])
+  }, [id])
 
   /* リアルタイムでメッセージを取得 */
   useEffect(() => {
-    isMountRef.current=true;
-    socket.on("RECEIVE_MESSAGE",(data)=>{
-        if(isMountRef.current){
-            setNewMessage(data)
-            console.log(data)
-        }
+    isMountRef.current = true;
+    socket.on("RECEIVE_MESSAGE", (data) => {
+      if (isMountRef.current) {
+        setNotificationNum(notificationNum+1)
+      }
     })
-    return()=>isMountRef.current=false 
-  },[])
+    return () => isMountRef.current = false
+  }, [])
 
   /* リアルタイムで申請の結果を送る */
-  const sendResult = ( type, dId, userId, title, date, accept ) => {
-    socket.emit("SEND_RESULT",{
-      type:type,
-      dId:dId,
-      rId:userId,
-      title:title,
-      date:date,
-      accept:accept,
+  const sendResult = (type, dId, userId, title, text, date, accept) => {
+    socket.emit("SEND_RESULT", {
+      type: type,
+      dId: dId,
+      rId: userId,
+      title: title,
+      text:text,
+      date: date,
+      accept: accept,
     })
   }
 
   return (
     <div className="App">
       <BrowserRouter>
-        <Header isLoggedIn={isLoggedIn} id={id} logout={logout}/>
+        <Header isLoggedIn={isLoggedIn} id={id} logout={logout} />
         <Switch>
           <Route exact path="/">
             <Top id={id} isLoggedIn={isLoggedIn} />
@@ -111,75 +125,74 @@ function App() {
           </Route>
 
           <Route path="/login">
-            <Login login={login}/>
+            <Login login={login} />
           </Route>
 
           <Route path="/notice/:id">
-            <Notice />
+            <Notice id={id}/>
           </Route>
 
           <Route path="/donate/:id">
-            <Donate id={id} name={name} twitterId={twitterId}/>
+            <Donate id={id} name={name} twitterId={twitterId} />
           </Route>
 
           <Route path="/selectDonation">
-            <Select />
+            <Select id={id}/>
           </Route>
 
           <Route path="/apply/:dId">
-            <Apply id={id} name={name} twitterId={twitterId}/>
+            <Apply id={id} name={name} twitterId={twitterId} />
           </Route>
 
           <Route path="/applyForm/:dId">
-            <ApplyForm id={id} name={name}/>
+            <ApplyForm id={id} name={name} />
           </Route>
-          
+
           <Route path="/profile/:userId">
-            <Profile id={id} twitterId={twitterId}/>
+            <Profile id={id} twitterId={twitterId} edit={edit}/>
           </Route>
 
           <Route
-          path="/myproject"
-          render={({match: { url }})=>(
-            <>
-            <Route exact path={ `${url}/:userId` }>
-              <Myproject id={id} />
-            </Route>
+            path="/myproject"
+            render={({ match: { url } }) => (
+              <>
+                <Route exact path={`${url}/:userId`}>
+                  <Myproject id={id} />
+                </Route>
 
-            <Route path={`${ url }/detail/:userId/:dId`}>
-              <Detail id={id}/>
-            </Route>
+                <Route path={`${url}/detail/:userId/:dId`}>
+                  <Detail id={id} />
+                </Route>
 
-            <Route path={`${ url }/applicants/:userId/:dId`}>
-              <Applicants id={id}/>
-            </Route>
+                <Route path={`${url}/applicants/:userId/:dId`}>
+                  <Applicants id={id} />
+                </Route>
 
-            <Route path={`${ url }/payment/:userId/:dId`}>
-              <Payment />
-            </Route>
+                <Route path={`${url}/payment/:userId/:dId`}>
+                  <Payment />
+                </Route>
 
-            </>
-          )} />
+              </>
+            )} />
 
           <Route
-          path="/admin"
-          render={({match: { url }})=>(
-            <>
-            <Route exact path={ url }>
-              <Admin id={id}/>
-            </Route>
+            path="/admin"
+            render={({ match: { url } }) => (
+              <>
+                <Route exact path={url}>
+                  <Admin id={id} />
+                </Route>
 
-            <Route path={`${ url }/check/:dId`}>
-              <Check sendResult={sendResult}/>
-            </Route>
+                <Route path={`${url}/check/:dId`}>
+                  <Check sendResult={sendResult} />
+                </Route>
+              </>
+            )} />
 
-            </>
-          )} />
-          
 
-        </Switch>       
+        </Switch>
       </BrowserRouter>
-      
+
     </div>
   );
 }
