@@ -5,7 +5,10 @@ import "./Select.css"
 import { Box, display, ThemeProvider } from "@mui/system"
 import { Container, Grid } from "@mui/material"
 import Theme from "../../ui/Theme"
-function Select() {
+function Select(props) {
+    
+    const { id } = props
+    console.log(id)
     const [dList, setDList] = useState([])
 
     useEffect(() => {
@@ -23,9 +26,15 @@ function Select() {
                     <Grid container sx={{ mt: 5 }}>
 
                         {dList.map((data, index) => {
-                            return (
-                                <Display key={index} info={data} who="ohter" />
-                            )
+                            
+                            if(id === data.userId){
+                                return(null)
+                            }else{
+                                return (
+                                    <Display key={index} info={data} who="ohter" />
+                                )
+                            }
+                            
                         })}
 
                     </Grid>

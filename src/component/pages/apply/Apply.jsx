@@ -20,7 +20,7 @@ function Apply(props){
 
     useEffect(() => {
         const getTwitterData = async () => {
-            if(state.required === 1){
+            if(state.required === 1 && state.step === 2){
                 if(twitterId !== null && twitterId !== undefined){
                     const { data } = await Axios.get(`https://friendly-bungotaketa-1534.lolipop.io/twitterData/${state.twitterId}`)
                     setTwitterInfo(data)
@@ -84,11 +84,18 @@ function Apply(props){
             <p>手動選択</p>
             }
             <br/>
+            {state.step ===2 ?
+            <>
             {fill ?
             <button onClick={()=>{history.push(`/applyForm/${state.dId}`)}}>応募する</button>
             :
             <p>あなたは応募のための条件を満たしていません</p>
             }
+            </>
+            :
+            <p>募集は終了しました</p>
+            }
+            
         </div> 
     )
 }

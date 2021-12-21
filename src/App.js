@@ -27,7 +27,6 @@ function App() {
   const [name, setName] = useState("")
   const [twitterId, setTwitterId] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [newMessage, setNewMessage] = useState({})
   const isMountRef = useRef(null)
 
   // 通知の数
@@ -50,6 +49,14 @@ function App() {
     }
   }, [])
 
+  /* 通知の数取得 */
+  useEffect(() => {
+    Axios.get(`https://friendly-bungotaketa-1534.lolipop.io/getNotRead/${id}`)
+    .then((response) => {
+      console.log(response.data.length)
+      setNotificationNum(response.data.length)
+    })
+  },[id])
 
 
   const login = (id, username, tId) => {
@@ -66,6 +73,11 @@ function App() {
     setName("")
   }
 
+  const edit = (name, twitterId) => {
+    setName(name)
+    setTwitterId(twitterId)
+  }
+
   /* リアルタイム通信関係 */
 
   /* 自分のidに参加 */
@@ -80,20 +92,20 @@ function App() {
     isMountRef.current = true;
     socket.on("RECEIVE_MESSAGE", (data) => {
       if (isMountRef.current) {
-        setNewMessage(data)
-        console.log(data)
+        setNotificationNum(notificationNum+1)
       }
     })
     return () => isMountRef.current = false
   }, [])
 
   /* リアルタイムで申請の結果を送る */
-  const sendResult = (type, dId, userId, title, date, accept) => {
+  const sendResult = (type, dId, userId, title, text, date, accept) => {
     socket.emit("SEND_RESULT", {
       type: type,
       dId: dId,
       rId: userId,
       title: title,
+      text:text,
       date: date,
       accept: accept,
     })
@@ -117,7 +129,7 @@ function App() {
           </Route>
 
           <Route path="/notice/:id">
-            <Notice />
+            <Notice id={id}/>
           </Route>
 
           <Route path="/donate/:id">
@@ -125,7 +137,7 @@ function App() {
           </Route>
 
           <Route path="/selectDonation">
-            <Select />
+            <Select id={id}/>
           </Route>
 
           <Route path="/apply/:dId">
@@ -137,7 +149,7 @@ function App() {
           </Route>
 
           <Route path="/profile/:userId">
-            <Profile id={id} twitterId={twitterId} />
+            <Profile id={id} twitterId={twitterId} edit={edit}/>
           </Route>
 
           <Route

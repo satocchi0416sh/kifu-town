@@ -11,6 +11,7 @@ function Myproject(props) {
     const [release, setRelease] = useState([])
     const [unpaid, setUnpaid] = useState([])
     const [finished, setFinished] = useState([])
+    const [unAccepted, setUnAccepted ] = useState([])
 
     useEffect(() => {
         Axios.get(`https://friendly-bungotaketa-1534.lolipop.io/getUnselected/${id}`)
@@ -29,6 +30,10 @@ function Myproject(props) {
             .then((response) => {
                 setFinished(response.data)
             })
+        Axios.get(`https://friendly-bungotaketa-1534.lolipop.io/getUnaccepted/${id}`)
+        .then((response) => {
+            setUnAccepted(response.data)
+        })
     }, [id])
 
     return (
@@ -69,6 +74,20 @@ function Myproject(props) {
                         <Typography sx={{ mt: 4, mb: 1 }} variant="h6" component="h2">現在公開中のプロジェクト</Typography>
                         <Grid container>
                             {release.map((data, index) => {
+                                return (
+                                    <Display key={index} info={data} who="mine" />
+                                )
+                            })}
+                        </Grid>
+                    </>
+                    :
+                    null}
+
+                    {unAccepted.length > 0 ?
+                    <>
+                        <Typography sx={{ mt: 4, mb: 1 }} variant="h6" component="h2">申請中のプロジェクト</Typography>
+                        <Grid container>
+                            {unAccepted.map((data, index) => {
                                 return (
                                     <Display key={index} info={data} who="mine" />
                                 )
