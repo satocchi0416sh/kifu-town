@@ -1,8 +1,9 @@
 import { useState, useEffect, memo } from "react"
 import { useHistory } from "react-router-dom"
 import Axios from "axios"
-import { Grid, Paper, ThemeProvider } from "@mui/material"
+import { Grid, Paper, Typography, Chip } from "@mui/material"
 import Theme from "./Theme"
+import { Redeem } from "@mui/icons-material"
 
 const Display = memo((props) => {
     const { info, who } = props
@@ -90,22 +91,36 @@ const Display = memo((props) => {
 
     let disLeft;
     if (left.type === "date") {
-        disLeft = <p>残り{left.left}日</p>
+        disLeft = `残り${left.left}日`
     } else if (left.type === "hour") {
-        disLeft = <p>残り{left.left}時間</p>
+        disLeft = `残り${left.left}時間`
     } else if (left.type === "minute") {
-        disLeft = <p>残り{left.left}分</p>
+        disLeft = `残り${left.left}分`
     } else if (left.type === "finish") {
-        disLeft = <p>【終了】{info.newDate} {info.time}</p>
+        disLeft = `【終了】${info.newDate} ${info.time}`
     }
+    else {
+        disLeft = "未公開"
+    }
+
     return (
-        <Grid item xs={12} sx={{ my: 2, }}>
-            <Paper sx={{ p: 2, cursor: "pointer", width: "100%" }}>
-                <h5>寄付者：{info.username}</h5>
-                <h2>{info.title}</h2>
-                <p>募集人数{info.rnumber}名/応募者数{anumber}名</p>
-                <p>{info.amount}円/１人あたり</p>
-                {disLeft}
+        <Grid item xs={12} onClick={goDetail}>
+            <Paper variant="outlined" sx={{ p: 2, cursor: "pointer" }}>
+                <Grid container>
+                    <Grid item xs={7}>
+                        <Typography variant="subtitle2" color="GrayText" component="h3" >{info.username}</Typography>
+                        <Typography variant="h5" component="h2">{info.title}</Typography>
+                        <Typography variant="subtitle2" component="h3" color="inherit">募集人数 <Typography variant="subtitle1" component="span" style={{ fontWeight: "bold", }}>{info.rnumber}</Typography> 名 / 応募者数 <Typography variant="subtitle1" component="span" style={{ fontWeight: "bold", }}>{anumber}</Typography> 名</Typography>
+                    </Grid>
+                    <Grid item xs={5} sx={{ textAlign: "right" }}>
+                        <Chip label={disLeft} color="secondary" sx={{ mb: 2 }} />
+                        <Grid container>
+                            <Grid item sx={{ flexGrow: 1 }} />
+                            <Grid item><Redeem /></Grid>
+                            <Grid item >{info.amount}円 / １人あたり</Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </Paper>
         </Grid>
     )

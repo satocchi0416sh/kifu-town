@@ -23,7 +23,7 @@ function Top(props) {
 
                                     <Grid container sx={{ my: 2 }} spacing={1}>
                                         <Grid item>
-                                            <Button variant="text">マイプロジェクトを見る</Button>
+                                            <Button variant="text" onClick={() => history.push(`/myproject/${id}`)}>マイプロジェクトを見る</Button>
                                         </Grid>
                                     </Grid>
                                     <Button variant="contained" sx={{ mt: 1 }} onClick={() => { history.push(`/donate/${id}`) }}>

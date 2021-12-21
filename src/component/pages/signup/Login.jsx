@@ -138,9 +138,6 @@ function Login(props) {
                             </Button>
                             <Grid container>
                                 <Grid item xs>
-                                    <Link onClick={backpage} variant="body2">
-                                        戻る
-                                    </Link>
                                 </Grid>
                                 <Grid item>
                                     <Link to="/signup" variant="body2">
