@@ -117,7 +117,7 @@ function App() {
           </Route>
 
           <Route path="/notice/:id">
-            <Notice />
+            <Notice id={id} />
           </Route>
 
           <Route path="/donate/:id">
@@ -125,7 +125,7 @@ function App() {
           </Route>
 
           <Route path="/selectDonation">
-            <Select />
+            <Select id={id} />
           </Route>
 
           <Route path="/apply/:dId">

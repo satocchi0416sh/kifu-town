@@ -1,8 +1,8 @@
-import { AccountCircle, AccountCircleOutlined, AccountCircleTwoTone, AddCircle, ExpandLess, ExpandMore, Home, ListAlt, Login, LogoutOutlined, MenuSharp, Notifications } from "@mui/icons-material"
-import { AppBar, Button, Collapse, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Modal, Stack, ThemeProvider, Toolbar, Tooltip, Typography } from "@mui/material"
+import { AccountCircle, AccountCircleOutlined, AddCircle, ExpandLess, ExpandMore, Home, ListAlt, Login, LogoutOutlined, MenuSharp, Notifications } from "@mui/icons-material"
+import { AppBar, Badge, Button, Collapse, Divider, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Modal, Stack, ThemeProvider, Toolbar, Tooltip, Typography } from "@mui/material"
 import { Box } from "@mui/system"
-import { memo, useEffect, useState } from "react"
-import { useHistory, Link } from "react-router-dom"
+import { memo, useState } from "react"
+import { useHistory } from "react-router-dom"
 import "./header.css"
 import Theme from "./Theme"
 
@@ -35,6 +35,9 @@ const Header = memo((props) => {
     const [logoutModal, setLogoutModal] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
+
+    // 通知
+    const [notifications, setNotifications] = useState(5);
 
 
     const list = () => (
@@ -75,7 +78,9 @@ const Header = memo((props) => {
                             }}
                         >
                             <ListItemIcon>
-                                <Notifications />
+                                <Badge badgeContent={notifications} color="secondary">
+                                    <Notifications />
+                                </Badge>
                             </ListItemIcon>
                             <ListItemText primary="通知" />
                         </ListItemButton>
@@ -209,7 +214,9 @@ const Header = memo((props) => {
                                         <Tooltip title="通知" arrow>
                                             <IconButton size="large" color="inherit"
                                                 onClick={() => { history.push(`/notice/${id}`) }}>
-                                                <Notifications />
+                                                <Badge badgeContent={notifications} color="secondary">
+                                                    <Notifications />
+                                                </Badge>
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title="プロフィール" arrow>
