@@ -1,81 +1,118 @@
 import { useHistory, useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
 import Axios from "axios"
+import { Box, ThemeProvider } from "@mui/system"
+import { Alert, Avatar, Button, Container, Divider, Grid, Paper, Typography } from "@mui/material"
+import Theme from "../../ui/Theme"
+import { Redeem } from "@mui/icons-material"
 
-function Detail(props){
+function Detail(props) {
     const { id } = props
     const history = useHistory()
     const { state } = useLocation()
-    const [ slist, setSlist ] = useState([])
+    const [slist, setSlist] = useState([])
 
     useEffect(() => {
-        if(state.step === 4){
+        if (state.step === 4) {
             Axios.get(`https://friendly-bungotaketa-1534.lolipop.io/getSelectedApplicant/${state.dId}`)
-            .then((response) => {
-            setSlist(response.data)
-            console.log(response.data)
-        })
+                .then((response) => {
+                    setSlist(response.data)
+                    console.log(response.data)
+                })
         }
-    },[state])
+    }, [state])
 
     let stepContainer;
-    if(state.step === 0 ){
+    if (state.step === 0) {
         stepContainer = <div>
             <p>このプロジェクトは現在審査中です。もうしばらくお待ちください。</p>
         </div>
-    }else if(state.step === 1){
+    } else if (state.step === 1) {
         stepContainer = <div>
             <p>あなたのプロジェクトはまだ公開されていません。公開される為には支払いを済ませてください。</p>
-            <button onClick={()=>{history.push({pathname:`/myproject/payment/${state.userId}/${state.dId}`, state:state})}}>支払う</button>
+            <Button variant="contained" fullWidth onClick={() => { history.push({ pathname: `/myproject/payment/${state.userId}/${state.dId}`, state: state }) }} sx={{ my: 2 }}>支払う</Button>
         </div>
-    }else if(state.step === 2){
+    } else if (state.step === 2) {
         stepContainer = <div>
             <p>このプロジェクトは現在公開されています</p>
-            <button onClick={()=>{history.push({pathname:`/myproject/applicants/${id}/${state.dId}`, state:state})}}>応募者一覧</button>
+            <Button variant="contained" fullWidth onClick={() => { history.push({ pathname: `/myproject/applicants/${id}/${state.dId}`, state: state }) }} sx={{ my: 2 }}>応募者一覧</Button>
         </div>
-    }else if(state.step === 3){
+    } else if (state.step === 3) {
         stepContainer = <div>
             <p>募集期間が終了しました。当選者を選んでください</p>
-            <button onClick={()=>{history.push({pathname:`/myproject/applicants/${id}/${state.dId}`, state:state})}}>当選者を選ぶ</button>
+            <Button variant="contained" fullWidth onClick={() => { history.push({ pathname: `/myproject/applicants/${id}/${state.dId}`, state: state }) }} sx={{ my: 2 }}>当選者を選ぶ</Button>
         </div>
-    }else if(state.step === 4){
+    } else if (state.step === 4) {
         stepContainer = <div>
             <p>このプロジェクトはすでに終了しています</p>
             <p>当選者</p>
             {slist.map((data, index) => {
-                return(
+                return (
                     <p key={index}>{data.username}</p>
                 )
             })}
         </div>
-    }else{
+    } else {
         stepContainer = <div>
             <p>このプロジェクトは許可されませんでした</p>
         </div>
     }
 
-    return(
+    return (
         <div>
-            <h5>{state.username}</h5>
-            <h1>{state.title}</h1>
-            <p>募集人数{state.rnumber}名</p>
-            <p>{state.amount}円/１人あたり</p>
-            <h3>{state.text}</h3>
-            <p>応募条件</p>
-            {state.required === 1 ?
-            <h5>Twitterをフォロー</h5>
-            :
-            <p>なし</p>}
-            <p>選定方法</p>
-            {state.auto ===1 ?
-            <p>自動抽選</p>
-            :
-            <p>手動選択</p>
-            }
-            <br/>
-            {stepContainer}
-            
-        </div> 
+            <ThemeProvider theme={Theme}>
+                <Container>
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <Redeem />
+                        </Avatar>
+                        <Typography component="h2" variant="h6">{state.username}</Typography>
+                        <Typography component="h1" variant="h4" sx={{ mt: 2 }}>{state.title}</Typography>
+                        <Grid container component={Paper} sx={{ p: 2, textAlign: "center" }}>
+                            <Grid item xs>
+                                募集人数<br />{state.rnumber}名
+                            </Grid>
+                            <Divider orientation="vertical" flexItem />
+                            <Grid item xs>
+                                １人あたり<br />{Number(state.amount / state.rnumber)}円
+                            </Grid>
+                        </Grid>
+                        <Box sx={{ textAlign: "left", width: "100%" }}>
+                            <Typography component="p" variant="body1" sx={{ mt: 2 }}>{state.text}</Typography>
+                            <Typography component="p" variant="body1" sx={{ mt: 2, mb: 1 }}>応募条件</Typography>
+
+                            {state.required === 1 ?
+                                <Paper sx={{ p: 2 }}>
+                                    <p>Twitterをフォロー</p>
+                                </Paper>
+                                :
+                                <Paper sx={{ p: 2 }}>
+                                    <p>なし</p>
+                                </Paper>
+                            }
+
+                            <Typography component="p" variant="body1" sx={{ mt: 2, mb: 1 }}>選定方法</Typography>
+                            <Paper sx={{ p: 2 }}>
+                                {state.auto === 1 ?
+                                    <p>自動抽選</p>
+                                    :
+                                    <p>手動選択</p>
+                                }
+                            </Paper>
+                        </Box>
+                        <Alert sx={{ mt: 2 }} severity="info">{stepContainer}</Alert>
+                    </Box>
+                </Container>
+            </ThemeProvider>
+
+        </div>
     )
 }
 export default Detail

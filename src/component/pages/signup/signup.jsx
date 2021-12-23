@@ -1,14 +1,18 @@
 import { useState } from "react"
-import { useHistory,Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import Axios from "axios"
-import "./signup.css"
-function SignUp (){
-    const [ name, setName ] = useState("")
-    const [ email, setEmail ] = useState("")
-    const [ password, setPassword ] = useState("")
-    const [ passCheck, setPassCheck] = useState("")
-    const [ passErr, setPassErr ] = useState(false)
-    const [ isRegistered, setIsRegistered ] = useState(false)
+import { ThemeProvider } from "@emotion/react";
+import Theme from "../../ui/Theme";
+import { Avatar, Button, Container, CssBaseline, Grid, TextField, Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import { Check, LockOutlined } from "@mui/icons-material";
+function SignUp() {
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [passCheck, setPassCheck] = useState("")
+    const [passErr, setPassErr] = useState(false)
+    const [isRegistered, setIsRegistered] = useState(false)
     const history = useHistory();
 
 
@@ -16,17 +20,17 @@ function SignUp (){
     const register = (e) => {
         e.preventDefault()
         setPassErr(false)
-        if( password === passCheck ){
+        if (password === passCheck) {
             setIsRegistered(true)
-            Axios.post("https://friendly-bungotaketa-1534.lolipop.io/signup",{
-                username:name,
-                email:email,
-                password:password,
+            Axios.post("https://friendly-bungotaketa-1534.lolipop.io/signup", {
+                username: name,
+                email: email,
+                password: password,
             })
-        }else{
+        } else {
             setPassErr(true)
         }
-        
+
     }
 
 
@@ -38,49 +42,134 @@ function SignUp (){
         history.goBack()
     }
 
-    return(
+    return (
         <>
-            {isRegistered ?
-            <div className="form">
-                <div className="container">   
-                    <p>新規登録が完了しました
-                    <br/>ログインしてサービスをお楽しみください</p>
-                    <button onClick={goLogin}>ログインする</button>
-                </div>
-            </div>          
-            :
-            <div className="form">
-                <div className="container">
-                    <form onSubmit = {register}>
-                        <label>ユーザー名</label>
-                        <br/>
-                        <input type="text" placeholder="username" value={name} onChange={(e)=>{setName(e.target.value)}}/>
-                        <br/>
-                        <label>メールアドレス</label>
-                        <br/>
-                        <input type="text" placeholder="e-mail" value={email} onChange={(e)=>{setEmail(e.target.value)}}/>
-                        <br/>
-                        <label>パスワード</label>
-                        <br/>
-                        <input type="text" placeholder="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
-                        <br/>
-                        <label>パスワード（確認）</label>
-                        {passErr
-                        ?
-                        <p>パスワードが一致しません</p>
-                        :null}
-                        <br/>
-                        <input type="text" placeholder="password(確認)" value={passCheck} onChange={(e)=>{setPassCheck(e.target.value)}}/>
-                        <br/>
-                        <button type="submit">登録する</button>
-                    </form>
-                    <br/>
-                    <br/>
-                    <button onClick={backpage}>戻る</button>
-                    <br/>
-                    <Link to="/login">すでにアカウントをお持ちの方はこちら</Link>
-                </div>        
-            </div>
+            {
+                !isRegistered ?
+                    <ThemeProvider theme={Theme}>
+                        < Container component="main" maxWidth="xs" >
+                            <CssBaseline />
+                            <Box
+                                sx={{
+                                    marginTop: 8,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                                    <LockOutlined />
+                                </Avatar>
+                                <Typography component="h1" variant="h5">
+                                    新規登録
+                                </Typography>
+                                <Box component="form" noValidate sx={{ mt: 3 }}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                autoComplete="given-name"
+                                                name="Name"
+                                                required
+                                                fullWidth
+                                                id="Name"
+                                                label="ユーザーネーム"
+                                                autoFocus
+                                                onChange={(e) => { setName(e.target.value) }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                id="email"
+                                                label="メールアドレス"
+                                                name="email"
+                                                autoComplete="email"
+                                                onChange={(e) => { setEmail(e.target.value) }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                name="password"
+                                                label="パスワード"
+                                                type="password"
+                                                id="password"
+                                                autoComplete="new-password"
+                                                onChange={(e) => { setPassword(e.target.value) }}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                error={passErr}
+                                                helperText={passErr ? "パスワードが一致しません" : null}
+                                                name="password"
+                                                label="パスワード(確認)"
+                                                type="password"
+                                                id="password"
+                                                autoComplete="new-password"
+                                                onChange={(e) => { setPassCheck(e.target.value) }}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Button
+                                        onClick={register}
+                                        type="submit"
+                                        fullWidth
+                                        variant="contained"
+                                        sx={{ mt: 3, mb: 2 }}
+                                    >
+                                        新規登録
+                                    </Button>
+                                    <Grid container>
+                                        <Grid item xs>
+                                        </Grid>
+                                        <Grid item>
+                                            <Link to="/login" variant="body2">
+                                                アカウント既に持っている場合はログイン
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            </Box>
+                        </Container >
+                    </ThemeProvider >
+                    :
+                    <ThemeProvider theme={Theme}>
+                        <Container component="main" maxWidth="xs">
+                            <CssBaseline />
+                            <Box
+                                sx={{
+                                    marginTop: 8,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                                    <Check />
+                                </Avatar>
+                                <Typography component="h1" variant="h5">
+                                    新規登録が完了しました。
+                                </Typography>
+                                <Typography component="h1" variant="body1" sx={{ mt: 2 }}>
+                                    ログインしてサービスをお楽しみください。
+                                </Typography>
+                                <Button
+                                    onClick={goLogin}
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    ログインする
+                                </Button>
+                            </Box>
+                        </Container>
+                    </ThemeProvider>
             }
         </>
     )
