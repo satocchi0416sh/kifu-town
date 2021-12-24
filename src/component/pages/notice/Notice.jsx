@@ -4,7 +4,7 @@ import Axios from "axios"
 import DisNote from "./DisNote"
 
 function Notice(props) {
-    const { id } = props
+    const { id, notificationNum } = props
     const history = useHistory()
     const [noticeList, setNoticeList] = useState([])//情報のリスト
 
@@ -18,7 +18,7 @@ function Notice(props) {
             .then((response) => {
                 setNoticeList(response.data)
             })
-
+        notificationNum()
     }, [id])
 
 

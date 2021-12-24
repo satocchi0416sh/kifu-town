@@ -110,7 +110,7 @@ function Donate(props) {
                             margin="normal"
                             required
                             fullWidth
-                            label="寄付総額"
+                            label="一人当たりの金額"
                             type="number"
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">円</InputAdornment>,

@@ -7,7 +7,7 @@ import "./header.css"
 import Theme from "./Theme"
 
 const Header = memo((props) => {
-    const { isLoggedIn, id, logout } = props
+    const { isLoggedIn, id, logout, notificationNum } = props
     const history = useHistory()
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -78,7 +78,7 @@ const Header = memo((props) => {
                             }}
                         >
                             <ListItemIcon>
-                                <Badge badgeContent={notifications} color="secondary">
+                                <Badge badgeContent={notificationNum} color="secondary">
                                     <Notifications />
                                 </Badge>
                             </ListItemIcon>
@@ -214,7 +214,7 @@ const Header = memo((props) => {
                                         <Tooltip title="通知" arrow>
                                             <IconButton size="large" color="inherit"
                                                 onClick={() => { history.push(`/notice/${id}`) }}>
-                                                <Badge badgeContent={notifications} color="secondary">
+                                                <Badge badgeContent={notificationNum} color="secondary">
                                                     <Notifications />
                                                 </Badge>
                                             </IconButton>
