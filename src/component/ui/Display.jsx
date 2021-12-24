@@ -2,7 +2,6 @@ import { useState, useEffect, memo } from "react"
 import { useHistory } from "react-router-dom"
 import Axios from "axios"
 import { Grid, Paper, Typography, Chip } from "@mui/material"
-import Theme from "./Theme"
 import { Redeem } from "@mui/icons-material"
 
 const Display = memo((props) => {

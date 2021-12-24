@@ -30,7 +30,7 @@ function App() {
   const isMountRef = useRef(null)
 
   // 通知の数
-  const [notificationNum, setNotificationNum] = useState(5)
+  const [notificationNum, setNotificationNum] = useState(0)
 
   useEffect(() => {
     const strage = localStorage.getItem("loggedDataTokenForkifukeiji")
@@ -58,6 +58,9 @@ function App() {
     })
   },[id])
 
+  const resetNum= () => {
+    setNotificationNum(0)
+  }
 
   const login = (id, username, tId) => {
     setIsLoggedIn(true)
@@ -114,7 +117,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Header isLoggedIn={isLoggedIn} id={id} logout={logout} />
+        <Header isLoggedIn={isLoggedIn} id={id} logout={logout} notificationNum={notificationNum}/>
         <Switch>
           <Route exact path="/">
             <Top id={id} isLoggedIn={isLoggedIn} />
@@ -129,7 +132,7 @@ function App() {
           </Route>
 
           <Route path="/notice/:id">
-            <Notice id={id}/>
+            <Notice id={id} resetNum={resetNum}/>
           </Route>
 
           <Route path="/donate/:id">
