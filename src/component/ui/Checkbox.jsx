@@ -1,8 +1,11 @@
+import { Done, DoneOutline, DoneOutlined } from "@mui/icons-material"
+import { Chip, ThemeProvider } from "@mui/material"
 import { useState, memo } from "react"
+import Theme from "./Theme"
 
 const Checkbox = memo((props) => {
-    const { name, value, add, del } = props  
-    const [ isCheck, setIsCheck ] = useState(false)
+    const { name, value, add, del } = props
+    const [isCheck, setIsCheck] = useState(false)
 
     const check = () => {
         setIsCheck(true)
@@ -14,17 +17,33 @@ const Checkbox = memo((props) => {
         del(value)
     }
 
-    return(
+    return (
         <>
-        {isCheck ?
-        <>
-        <button onClick={deleteCheck}>Check/{name}</button>
-        </>
-        :
-        <>
-        <button onClick={check}>{name}</button>
-        </>
-        }
+            <ThemeProvider theme={Theme}>
+                {isCheck ?
+                    <>
+                        <Chip
+                            label={name}
+                            onClick={deleteCheck}
+                            onDelete={deleteCheck}
+                            deleteIcon={<Done color="primary" />}
+                            color="secondary"
+                            sx={{ mr: 2 }}
+                        />
+
+                    </>
+                    :
+                    <>
+                        <Chip
+                            label={name}
+                            onClick={check}
+                            onDelete={check}
+                            deleteIcon={<Done />}
+                            sx={{ mr: 2 }}
+                        />
+                    </>
+                }
+            </ThemeProvider>
         </>
     )
 })

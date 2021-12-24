@@ -5,6 +5,7 @@ import { Box, ThemeProvider } from "@mui/system"
 import { Alert, Avatar, Button, Container, Divider, Grid, Paper, Typography } from "@mui/material"
 import Theme from "../../ui/Theme"
 import { Redeem } from "@mui/icons-material"
+import { comma } from "../../../App"
 
 function Detail(props) {
     const { id } = props
@@ -81,7 +82,7 @@ function Detail(props) {
                             </Grid>
                             <Divider orientation="vertical" flexItem />
                             <Grid item xs>
-                                １人あたり<br />{Number(state.amount / state.rnumber)}円
+                                1人あたり<br />{comma(Number(state.amount / state.rnumber))}円
                             </Grid>
                         </Grid>
                         <Box sx={{ textAlign: "left", width: "100%" }}>

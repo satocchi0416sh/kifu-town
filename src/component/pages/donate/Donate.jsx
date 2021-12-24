@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Axios from "axios"
 import { Box, ThemeProvider } from "@mui/system"
 import Theme from "../../ui/Theme"
 import { Avatar, Button, Container, CssBaseline, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Modal, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material"
 import { Send } from "@mui/icons-material"
 import { useHistory } from "react-router"
+import { comma } from "../../../App"
 
 function Donate(props) {
     const { id, name, twitterId } = props
@@ -16,6 +17,9 @@ function Donate(props) {
     const [auto, setAuto] = useState("")
 
     const [donationModal, setDonationModal] = useState(false);
+
+    const [isEnough, setIsEnough] = useState(true);
+
 
     const history = useHistory();
 
@@ -30,11 +34,22 @@ function Donate(props) {
     }, [required, twitterId])
 
     const checkDonation = (e) => {
-        e.preventDefault()
         console.log(name)
         setDonationModal(true)
     }
 
+    const isFirstRender = useRef(false)
+
+    useEffect(() => { // 初回レンダー時呼ばれるeffect
+        isFirstRender.current = true
+    }, [])
+
+    useEffect(() => {
+        if (isFirstRender.current) // 初回レンダー判定
+            isFirstRender.current = false // もう初回レンダーじゃないよ代入
+        else
+            setIsEnough(!(amount * rnumber < 10000));
+    }, [amount, rnumber])
 
 
     const postDonation = () => {
@@ -84,7 +99,14 @@ function Donate(props) {
                     <Typography component="h1" variant="h5">
                         寄付送信ページ
                     </Typography>
-                    <Box component="form" onSubmit={checkDonation} sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={e => {
+                        if (isEnough) {
+                            e.preventDefault();
+                            checkDonation();
+                        }
+                        else
+                            e.preventDefault();
+                    }} sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required
@@ -106,18 +128,36 @@ function Donate(props) {
                             value={text}
                             onChange={(e) => { setText(e.target.value) }}
                         />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            label="一人当たりの金額"
-                            type="number"
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end">円</InputAdornment>,
-                            }}
-                            value={amount}
-                            onChange={(e) => { setAmount(e.target.value) }}
-                        />
+                        {isEnough
+                            ?
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="一人当たりの金額"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">円</InputAdornment>,
+                                }}
+                                value={amount}
+                                onChange={(e) => { setAmount(e.target.value) }}
+                            />
+                            :
+                            <TextField
+                                error
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="一人当たりの金額"
+                                type="number"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">円</InputAdornment>,
+                                }}
+                                value={amount}
+                                onChange={(e) => { setAmount(e.target.value) }}
+                                helperText="合計金額が10,000円以上になるように設定してください"
+                            />
+                        }
                         <TextField
                             margin="normal"
                             required
@@ -201,7 +241,7 @@ function Donate(props) {
                                     <TableCell component="th" scope="row">
                                         寄付総額
                                     </TableCell>
-                                    <TableCell align="right">{amount}</TableCell>
+                                    <TableCell align="right">{comma(amount)}</TableCell>
                                 </TableRow>
                                 <TableRow
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

@@ -201,3 +201,11 @@ function App() {
 }
 
 export default App;
+
+export function comma(num) {
+  return String(num).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+}
+
+export function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}

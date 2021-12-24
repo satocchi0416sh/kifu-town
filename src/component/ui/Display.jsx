@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom"
 import Axios from "axios"
 import { Grid, Paper, Typography, Chip } from "@mui/material"
 import { Redeem } from "@mui/icons-material"
+import { comma } from "../../App"
 
 const Display = memo((props) => {
     const { info, who } = props
@@ -116,7 +117,7 @@ const Display = memo((props) => {
                         <Grid container>
                             <Grid item sx={{ flexGrow: 1 }} />
                             <Grid item><Redeem /></Grid>
-                            <Grid item >{info.amount}円 / １人あたり</Grid>
+                            <Grid item >{comma(info.amount)}円 / １人あたり</Grid>
                         </Grid>
                     </Grid>
                 </Grid>
