@@ -69,6 +69,8 @@ function Apply(props) {
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
+        height: "70vh",
+        overflow: "scroll",
         p: 4,
     };
 
@@ -187,10 +189,10 @@ function Apply(props) {
                                 steps.map((step) => {
                                     return (
                                         <Grid key={step.step} container component={Paper} sx={{ p: 2, mb: 1 }}>
-                                            <Grid item xs={5} >
+                                            <Grid item xs={5} sx={{ p: 1 }}>
                                                 <Box sx={{ background: `url(${step.img})`, height: "100%", backgroundSize: "contain", backgroundRepeat: "no-repeat" }}></Box>
                                             </Grid>
-                                            <Grid item xs={7}>
+                                            <Grid item xs={7} sx={{ p: 1 }}>
                                                 <Typography component="h2" variant="subtitle1">ステップ{step.step}</Typography>
                                                 <Typography component="p" variant="body2">{step.text}</Typography>
                                             </Grid>
