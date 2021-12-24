@@ -10,7 +10,7 @@ import Theme from "../../ui/Theme";
 
 
 function Profile(props) {
-    const { id, twitterId, edit } = props
+    const { id, twitterId } = props
     const [newName, setNewName] = useState("")
     const [newTwitterId, setNewTwitterId] = useState(twitterId)
     const [newComment, setNewComment] = useState("")
@@ -40,7 +40,6 @@ function Profile(props) {
             comment: newComment,
             twitterId: newTwitterId
         })
-        edit(newName, newTwitterId)
         setEditMode(false)
     }
 
